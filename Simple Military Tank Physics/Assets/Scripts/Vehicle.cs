@@ -52,6 +52,7 @@ public class Vehicle : MonoBehaviour
 
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
+        float verticalRaw = Input.GetAxisRaw("Vertical");
 
         Vector3 localVeloity = transform.InverseTransformDirection(rb.velocity);
 
@@ -105,9 +106,11 @@ public class Vehicle : MonoBehaviour
 
                 float forwardVel = Mathf.Clamp(localVeloity.z, -maxSpeed, maxSpeed);
 
-                forward *= 1 - vertical;
+                forward *= 1 - Mathf.Abs(vertical);
                 forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxSpeed));
                 sideDirection *= w.collider.localPosition.z * rotationAcceleration;
+
+                if (verticalRaw == -1) sideDirection *= -1;
 
                 Vector3 upForce = hit.normal * up;
                 Vector3 sideForce = -transform.right * side;
