@@ -14,8 +14,10 @@ public class Vehicle : MonoBehaviour
 
         [NonSerialized] public float lastSpringLenght;
         [NonSerialized] public float currentSpringLenght;
+        [NonSerialized] public MeshRenderer meshRenderer;
     }
 
+    public SkinnedMeshRenderer mat;
     public float wheelRadius;
     public float springLenght;
     public float springStiffness;
@@ -25,13 +27,16 @@ public class Vehicle : MonoBehaviour
     [SerializeField] public Wheel[] wheels;
 
     private Rigidbody rb;
-
-    private float minLenght;
-    private float maxLenght;
+    private MeshRenderer[] wheelsRenderers;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        foreach (var w in wheels)
+        {
+            w.meshRenderer = w.mesh.GetComponent<MeshRenderer>();
+        }
     }
 
     void FixedUpdate()
@@ -42,9 +47,24 @@ public class Vehicle : MonoBehaviour
             rb.AddForce(Vector3.up * force);
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            mat.enabled = mat.enabled ? false : true;
+        }
+
         foreach (var w in wheels)
         {
-            if (Physics.Raycast(w.collider.position + (transform.up * springHeight), -transform.up, out RaycastHit hit, springLenght + wheelRadius + springHeight))
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
+            }
+
+            Vector3 wheelPosition = w.collider.position;
+            Vector3 springPosition = wheelPosition + (transform.up * springHeight);
+
+            Debug.DrawRay(springPosition, -transform.up * springHeight, Color.red);
+
+            if (Physics.Raycast(springPosition, -transform.up, out RaycastHit hit, springLenght + wheelRadius + springHeight))
             {
                 Vector3 wheelVelocity = transform.InverseTransformDirection(rb.GetPointVelocity(hit.point));
 
@@ -78,15 +98,19 @@ public class Vehicle : MonoBehaviour
                 w.bone.position = wheelPos;
                 w.mesh.position = wheelPos;
 
-                Debug.DrawLine(w.collider.position, hit.point);
                 Debug.Log(suspensionForce);
+                Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
+                Debug.DrawLine(hit.point, hit.point + (transform.up * wheelRadius), Color.red);
             }
 
             else
             {
-                Vector3 wheelPos = w.collider.position + (-transform.up * springLenght);
+                Vector3 wheelPos = wheelPosition + (-transform.up * springLenght);
                 w.bone.position = wheelPos;
                 w.mesh.position = wheelPos;
+
+                Debug.DrawRay(wheelPosition, -transform.up * springLenght);
+                Debug.DrawLine(wheelPosition + (-transform.up * springLenght), wheelPosition + (-transform.up * (springLenght + wheelRadius)), Color.red);
             }
         }
     }
