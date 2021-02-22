@@ -25,11 +25,29 @@ public class CameraController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        transform.Rotate(((Vector3.up * mouseX) + (Vector3.right * mouseY)) * rotSpeed);
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            Vector3 moveVel = cam.forward * camZoomSpeed * mouseY;
 
-        Vector3 cameraLookAt = target.position + (Vector3.up * camHeight);
+            float distance = Vector3.Distance(cam.position, target.position + (Vector3.up * camHeight));
 
-        cam.LookAt(cameraLookAt);
+            if (distance <= maxCamDistance && distance >= minCamDistance) cam.Translate(moveVel, Space.World);
+            else if (distance > maxCamDistance)
+            {
+                if (mouseY > 0) cam.Translate(moveVel, Space.World);
+            }
+            else if (distance < minCamDistance)
+            {
+                if (mouseY < 0) cam.Translate(moveVel, Space.World);
+            }
+        }
+        else
+        {
+            Vector3 cameraLookAt = target.position + (Vector3.up * camHeight);
+            cam.LookAt(cameraLookAt);
+            transform.Rotate(((Vector3.up * mouseX) + (Vector3.right * mouseY)) * rotSpeed);
+        }
+
         transform.position = target.position;
     }
 }
