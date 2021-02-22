@@ -20,10 +20,14 @@ public class Vehicle : MonoBehaviour
     public float springLenght;
     public float springStiffness;
     public float damperStiffness;
+    public float springHeight;
 
     [SerializeField] public Wheel[] wheels;
 
     private Rigidbody rb;
+
+    private float minLenght;
+    private float maxLenght;
 
     void Start()
     {
@@ -32,19 +36,19 @@ public class Vehicle : MonoBehaviour
 
     void FixedUpdate()
     {
-        Time.timeScale = 0.4f;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
             rb.AddForce(Vector3.up * force);
         }
 
         foreach (var w in wheels)
         {
-            if (Physics.Raycast(w.collider.position, -transform.up, out RaycastHit hit, springLenght + wheelRadius))
+            if (Physics.Raycast(w.collider.position + (transform.up * springHeight), -transform.up, out RaycastHit hit, springLenght + wheelRadius + springHeight))
             {
-                float distance = hit.distance - wheelRadius;
+                Vector3 wheelVelocity = transform.InverseTransformDirection(rb.GetPointVelocity(hit.point));
+
+                float distance = hit.distance - wheelRadius - springHeight;
 
                 w.lastSpringLenght = w.currentSpringLenght;
                 w.currentSpringLenght = distance;
@@ -57,8 +61,16 @@ public class Vehicle : MonoBehaviour
                 float damperForce = damperStiffness * springVelocity;
                 float suspensionForce = springForce + damperForce;
 
-                Vector3 upForce = Vector3.up * suspensionForce;
-                Vector3 totalForce = upForce;
+                suspensionForce = Mathf.Clamp(suspensionForce, 0, suspensionForce);
+
+                float up = suspensionForce;
+                float side = springForce * wheelVelocity.x;
+                float forward = springForce * wheelVelocity.z;
+
+                Vector3 upForce = Vector3.up * up;
+                Vector3 sideForce = -transform.right * side;
+                Vector3 forwardForce = -transform.forward * forward;
+                Vector3 totalForce = upForce + sideForce + forwardForce;
 
                 rb.AddForceAtPosition(totalForce, w.collider.position);
 
@@ -67,6 +79,7 @@ public class Vehicle : MonoBehaviour
                 w.mesh.position = wheelPos;
 
                 Debug.DrawLine(w.collider.position, hit.point);
+                Debug.Log(suspensionForce);
             }
 
             else
