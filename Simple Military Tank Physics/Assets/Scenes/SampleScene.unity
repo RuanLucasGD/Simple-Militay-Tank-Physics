@@ -3267,6 +3267,36 @@ Transform:
   m_Father: {fileID: 916629289}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &592096547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 592096548}
+  m_Layer: 0
+  m_Name: center of mass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &592096548
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592096547}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1213883375621400571}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &595396252
 GameObject:
   m_ObjectHideFlags: 0
@@ -12177,8 +12207,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987007534436334913}
-  m_LocalRotation: {x: -0, y: -0.45572853, z: -0, w: 0.89011884}
-  m_LocalPosition: {x: 399.69, y: 14.44, z: 335.62}
+  m_LocalRotation: {x: -0, y: 0.057407055, z: -0, w: 0.99835086}
+  m_LocalPosition: {x: 375.2, y: 14.44, z: 204.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5814488648419121987}
@@ -12188,9 +12218,10 @@ Transform:
   - {fileID: 4801570741124209069}
   - {fileID: 1328713183}
   - {fileID: 916629289}
+  - {fileID: 592096548}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: -54.224003, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 6.5820003, z: 0}
 --- !u!1 &1238281312170821129
 GameObject:
   m_ObjectHideFlags: 0
@@ -12406,14 +12437,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 200000
-  forwardAcceleration: 1000
-  rotationAcceleration: 500
+  forwardAcceleration: 500
+  rotationAcceleration: 700
   maxSpeed: 30
+  centerOfMass: {fileID: 592096548}
   mat: {fileID: 8258071588800873348}
-  wheelRadius: 0.33
+  wheelRadius: 0.4
   springLenght: 0.4
-  springStiffness: 6000
-  damperStiffness: 600
+  springStiffness: 3000
+  damperStiffness: 1000
   springHeight: 0.1
   wheels:
   - collider: {fileID: 1975084595}

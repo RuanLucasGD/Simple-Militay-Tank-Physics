@@ -21,6 +21,7 @@ public class Vehicle : MonoBehaviour
     public float rotationAcceleration;
     public float maxSpeed;
 
+    public Transform centerOfMass;
     public SkinnedMeshRenderer mat;
     public float wheelRadius;
     public float springLenght;
@@ -36,6 +37,8 @@ public class Vehicle : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Debug.Log(rb.centerOfMass);
+
 
         foreach (var w in wheels)
         {
@@ -45,8 +48,12 @@ public class Vehicle : MonoBehaviour
 
     void FixedUpdate()
     {
+        rb.centerOfMass = centerOfMass.localPosition;
+
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
+
+        Vector3 localVeloity = transform.InverseTransformDirection(rb.velocity);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -96,10 +103,10 @@ public class Vehicle : MonoBehaviour
                 float forwardDirection = vertical;
                 float sideDirection = horizontal;
 
-                forward *= 1 - Mathf.Abs(forwardDirection);
-                //side *= 1 - Mathf.Abs(sideDirection);
+                float forwardVel = Mathf.Clamp(localVeloity.z, -maxSpeed, maxSpeed);
 
-                forwardDirection *= forwardAcceleration;
+                forward *= 1 - vertical;
+                forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxSpeed));
                 sideDirection *= w.collider.localPosition.z * rotationAcceleration;
 
                 Vector3 upForce = hit.normal * up;
@@ -116,7 +123,7 @@ public class Vehicle : MonoBehaviour
                 w.mesh.position = wheelPos;
 
                 Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
-                Debug.DrawLine(hit.point, hit.point + (transform.up * wheelRadius), Color.red);
+                Debug.DrawLine(wheelPos, hit.point + (transform.up * wheelRadius), Color.red);
             }
 
             else
