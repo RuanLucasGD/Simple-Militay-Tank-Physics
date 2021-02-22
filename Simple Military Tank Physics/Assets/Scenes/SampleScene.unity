@@ -6099,13 +6099,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.13214476, y: 0.22955392, z: -0.031474687, w: 0.96376973}
-  m_LocalPosition: {x: 409.81, y: 16.64, z: 305.43}
+  m_LocalRotation: {x: -0.004945939, y: 0.94646806, z: 0.014518311, w: 0.32243308}
+  m_LocalPosition: {x: 366.7, y: 13.9, z: 358.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 15.615001, y: 26.795002, z: 0}
+  m_LocalEulerAnglesHint: {x: -1.7580001, y: 142.375, z: 0}
 --- !u!1 &989211842
 GameObject:
   m_ObjectHideFlags: 0
@@ -12178,7 +12178,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987007534436334913}
   m_LocalRotation: {x: -0, y: -0.45572853, z: -0, w: 0.89011884}
-  m_LocalPosition: {x: 372, y: 14.44, z: 343.7}
+  m_LocalPosition: {x: 399.69, y: 14.44, z: 335.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5814488648419121987}
@@ -12406,6 +12406,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 200000
+  forwardAcceleration: 1000
+  rotationAcceleration: 500
+  maxSpeed: 30
   mat: {fileID: 8258071588800873348}
   wheelRadius: 0.33
   springLenght: 0.4

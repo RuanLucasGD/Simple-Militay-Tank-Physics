@@ -17,6 +17,10 @@ public class Vehicle : MonoBehaviour
         [NonSerialized] public MeshRenderer meshRenderer;
     }
 
+    public float forwardAcceleration;
+    public float rotationAcceleration;
+    public float maxSpeed;
+
     public SkinnedMeshRenderer mat;
     public float wheelRadius;
     public float springLenght;
@@ -41,6 +45,8 @@ public class Vehicle : MonoBehaviour
 
     void FixedUpdate()
     {
+        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -87,10 +93,21 @@ public class Vehicle : MonoBehaviour
                 float side = springForce * wheelVelocity.x;
                 float forward = springForce * wheelVelocity.z;
 
-                Vector3 upForce = Vector3.up * up;
+                float forwardDirection = vertical;
+                float sideDirection = horizontal;
+
+                forward *= 1 - Mathf.Abs(forwardDirection);
+                //side *= 1 - Mathf.Abs(sideDirection);
+
+                forwardDirection *= forwardAcceleration;
+                sideDirection *= w.collider.localPosition.z * rotationAcceleration;
+
+                Vector3 upForce = hit.normal * up;
                 Vector3 sideForce = -transform.right * side;
                 Vector3 forwardForce = -transform.forward * forward;
-                Vector3 totalForce = upForce + sideForce + forwardForce;
+                Vector3 directionForce = (transform.forward * forwardDirection) + (transform.right * sideDirection);
+
+                Vector3 totalForce = upForce + sideForce + forwardForce + directionForce;
 
                 rb.AddForceAtPosition(totalForce, w.collider.position);
 
@@ -98,7 +115,6 @@ public class Vehicle : MonoBehaviour
                 w.bone.position = wheelPos;
                 w.mesh.position = wheelPos;
 
-                Debug.Log(suspensionForce);
                 Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
                 Debug.DrawLine(hit.point, hit.point + (transform.up * wheelRadius), Color.red);
             }
