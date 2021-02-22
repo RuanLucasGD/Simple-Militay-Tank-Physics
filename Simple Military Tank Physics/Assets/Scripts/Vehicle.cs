@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Vehicle : MonoBehaviour
 {
-    public float force;
-
     [Serializable]
     public class Wheel
     {
@@ -22,7 +20,9 @@ public class Vehicle : MonoBehaviour
     public float maxSpeed;
 
     public Transform centerOfMass;
+
     public SkinnedMeshRenderer mat;
+
     public float wheelRadius;
     public float springLenght;
     public float springStiffness;
@@ -37,8 +37,6 @@ public class Vehicle : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        Debug.Log(rb.centerOfMass);
-
 
         foreach (var w in wheels)
         {
@@ -56,23 +54,8 @@ public class Vehicle : MonoBehaviour
 
         Vector3 localVeloity = transform.InverseTransformDirection(rb.velocity);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            rb.AddForce(Vector3.up * force);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            mat.enabled = mat.enabled ? false : true;
-        }
-
         foreach (var w in wheels)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
-            }
-
             Vector3 wheelPosition = w.collider.position;
             Vector3 springPosition = wheelPosition + (transform.up * springHeight);
 
@@ -112,7 +95,7 @@ public class Vehicle : MonoBehaviour
 
                 if (verticalRaw == -1) sideDirection *= -1;
 
-                Vector3 upForce = hit.normal * up;
+                Vector3 upForce = Vector3.up * up;
                 Vector3 sideForce = -transform.right * side;
                 Vector3 forwardForce = -transform.forward * forward;
                 Vector3 directionForce = (transform.forward * forwardDirection) + (transform.right * sideDirection);
@@ -126,7 +109,7 @@ public class Vehicle : MonoBehaviour
                 w.mesh.position = wheelPos;
 
                 Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
-                Debug.DrawLine(wheelPos, hit.point + (transform.up * wheelRadius), Color.red);
+                Debug.DrawRay(hit.point, transform.up * wheelRadius, Color.red);
             }
 
             else
@@ -137,6 +120,24 @@ public class Vehicle : MonoBehaviour
 
                 Debug.DrawRay(wheelPosition, -transform.up * springLenght);
                 Debug.DrawLine(wheelPosition + (-transform.up * springLenght), wheelPosition + (-transform.up * (springLenght + wheelRadius)), Color.red);
+            }
+        }
+
+        DisableSuspensionRenderer();
+    }
+
+    void DisableSuspensionRenderer()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            mat.enabled = mat.enabled ? false : true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            foreach (var w in wheels)
+            {
+                w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
             }
         }
     }
