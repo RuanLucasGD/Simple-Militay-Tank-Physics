@@ -11347,8 +11347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1213883375621400571}
-  rotSpeed: 2
-  camZoomSpeed: 1
+  rotSpeed: 8
+  camZoomSpeed: 4
   camHeight: 6
   maxCamDistance: 50
   minCamDistance: 10
