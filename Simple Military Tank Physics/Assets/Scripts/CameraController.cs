@@ -50,4 +50,17 @@ public class CameraController : MonoBehaviour
 
         transform.position = target.position;
     }
+
+    public Vector3 GetTargetPosition()
+    {
+        float maxDistance = 10000;
+        Vector3 pos = cam.forward * maxDistance;
+
+        if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxCamDistance))
+        {
+            return hit.point;
+        }
+
+        return pos;
+    }
 }
