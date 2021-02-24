@@ -3,9 +3,11 @@
 public class CameraController : MonoBehaviour
 {
     public Transform target;
+
     public float rotSpeed;
-    public float camZoomSpeed;
     public float camHeight;
+    public float camZoomSpeed;
+    public float maxSightDistance;
 
     private Transform cam;
 
@@ -53,10 +55,9 @@ public class CameraController : MonoBehaviour
 
     public Vector3 GetTargetPosition()
     {
-        float maxDistance = 10000;
-        Vector3 pos = cam.forward * maxDistance;
+        Vector3 pos = cam.position + cam.forward * 100;
 
-        if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxCamDistance))
+        if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxSightDistance))
         {
             return hit.point;
         }
