@@ -12817,11 +12817,11 @@ MonoBehaviour:
   rotationAcceleration: 500
   maxMoveSpeed: 15
   centerOfMass: {fileID: 173287777}
-  wheelRadius: 0.4
-  springLenght: 0.4
-  springStiffness: 8000
-  damperStiffness: 600
-  springHeight: 0.1
+  wheelRadius: 0.45
+  springLenght: 0.15
+  springStiffness: 16000
+  damperStiffness: 1000
+  springHeight: 0.2
   additionalWheelMeshs:
   - {fileID: 3163170171597005721}
   - {fileID: 3793413851643010922}
