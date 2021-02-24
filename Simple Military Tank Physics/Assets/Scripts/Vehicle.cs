@@ -21,7 +21,8 @@ public class Vehicle : MonoBehaviour
 
     public Transform centerOfMass;
 
-    public SkinnedMeshRenderer mat;
+    public SkinnedMeshRenderer matLeft;
+    public SkinnedMeshRenderer matRight;
 
     public float wheelRadius;
     public float springLenght;
@@ -29,7 +30,8 @@ public class Vehicle : MonoBehaviour
     public float damperStiffness;
     public float springHeight;
 
-    [SerializeField] public Wheel[] wheels;
+    [SerializeField] public Wheel[] wheelsLeft;
+    [SerializeField] public Wheel[] wheelsRight;
 
     private Rigidbody rb;
     private MeshRenderer[] wheelsRenderers;
@@ -38,7 +40,7 @@ public class Vehicle : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        foreach (var w in wheels)
+        foreach (var w in wheelsLeft)
         {
             w.meshRenderer = w.mesh.GetComponent<MeshRenderer>();
         }
@@ -48,94 +50,96 @@ public class Vehicle : MonoBehaviour
     {
         rb.centerOfMass = centerOfMass.localPosition;
 
+        foreach (var w in wheelsLeft) UseWheelCollider(w);
+        foreach (var w in wheelsRight) UseWheelCollider(w);
+
+        DisableSuspensionRenderer();
+    }
+
+    void UseWheelCollider(Wheel w)
+    {
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
         float verticalRaw = Input.GetAxisRaw("Vertical");
 
         Vector3 localVeloity = transform.InverseTransformDirection(rb.velocity);
+        Vector3 wheelPosition = w.collider.position;
+        Vector3 springPosition = wheelPosition + (transform.up * springHeight);
 
-        foreach (var w in wheels)
+        Debug.DrawRay(springPosition, -transform.up * springHeight, Color.red);
+
+        if (Physics.Raycast(springPosition, -transform.up, out RaycastHit hit, springLenght + wheelRadius + springHeight))
         {
-            Vector3 wheelPosition = w.collider.position;
-            Vector3 springPosition = wheelPosition + (transform.up * springHeight);
+            Vector3 wheelVelocity = transform.InverseTransformDirection(rb.GetPointVelocity(hit.point));
 
-            Debug.DrawRay(springPosition, -transform.up * springHeight, Color.red);
+            float distance = hit.distance - wheelRadius - springHeight;
 
-            if (Physics.Raycast(springPosition, -transform.up, out RaycastHit hit, springLenght + wheelRadius + springHeight))
-            {
-                Vector3 wheelVelocity = transform.InverseTransformDirection(rb.GetPointVelocity(hit.point));
+            w.lastSpringLenght = w.currentSpringLenght;
+            w.currentSpringLenght = distance;
 
-                float distance = hit.distance - wheelRadius - springHeight;
+            w.currentSpringLenght = Mathf.Clamp(w.currentSpringLenght, 0, springLenght);
 
-                w.lastSpringLenght = w.currentSpringLenght;
-                w.currentSpringLenght = distance;
+            float springVelocity = (w.lastSpringLenght - w.currentSpringLenght) / Time.fixedDeltaTime;
+            float springForce = springStiffness * (springLenght - w.currentSpringLenght);
 
-                w.currentSpringLenght = Mathf.Clamp(w.currentSpringLenght, 0, springLenght);
+            float damperForce = damperStiffness * springVelocity;
+            float suspensionForce = springForce + damperForce;
 
-                float springVelocity = (w.lastSpringLenght - w.currentSpringLenght) / Time.fixedDeltaTime;
-                float springForce = springStiffness * (springLenght - w.currentSpringLenght);
+            suspensionForce = Mathf.Clamp(suspensionForce, 0, suspensionForce);
 
-                float damperForce = damperStiffness * springVelocity;
-                float suspensionForce = springForce + damperForce;
+            float up = suspensionForce;
+            float side = springForce * wheelVelocity.x;
+            float forward = springForce * wheelVelocity.z;
 
-                suspensionForce = Mathf.Clamp(suspensionForce, 0, suspensionForce);
+            float forwardDirection = vertical;
+            float sideDirection = horizontal;
 
-                float up = suspensionForce;
-                float side = springForce * wheelVelocity.x;
-                float forward = springForce * wheelVelocity.z;
+            float forwardVel = Mathf.Clamp(localVeloity.z, -maxSpeed, maxSpeed);
 
-                float forwardDirection = vertical;
-                float sideDirection = horizontal;
+            forward *= 1 - Mathf.Abs(vertical);
+            forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxSpeed));
+            sideDirection *= w.collider.localPosition.z * rotationAcceleration;
 
-                float forwardVel = Mathf.Clamp(localVeloity.z, -maxSpeed, maxSpeed);
+            if (verticalRaw == -1) sideDirection *= -1;
 
-                forward *= 1 - Mathf.Abs(vertical);
-                forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxSpeed));
-                sideDirection *= w.collider.localPosition.z * rotationAcceleration;
+            Vector3 upForce = Vector3.up * up;
+            Vector3 sideForce = -transform.right * side;
+            Vector3 forwardForce = -transform.forward * forward;
+            Vector3 directionForce = (transform.forward * forwardDirection) + (transform.right * sideDirection);
 
-                if (verticalRaw == -1) sideDirection *= -1;
+            Vector3 totalForce = upForce + sideForce + forwardForce + directionForce;
 
-                Vector3 upForce = Vector3.up * up;
-                Vector3 sideForce = -transform.right * side;
-                Vector3 forwardForce = -transform.forward * forward;
-                Vector3 directionForce = (transform.forward * forwardDirection) + (transform.right * sideDirection);
+            rb.AddForceAtPosition(totalForce, w.collider.position);
 
-                Vector3 totalForce = upForce + sideForce + forwardForce + directionForce;
+            Vector3 wheelPos = w.collider.position + (-transform.up * distance);
+            w.bone.position = wheelPos;
+            w.mesh.position = wheelPos;
 
-                rb.AddForceAtPosition(totalForce, w.collider.position);
-
-                Vector3 wheelPos = w.collider.position + (-transform.up * distance);
-                w.bone.position = wheelPos;
-                w.mesh.position = wheelPos;
-
-                Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
-                Debug.DrawRay(hit.point, transform.up * wheelRadius, Color.red);
-            }
-
-            else
-            {
-                Vector3 wheelPos = wheelPosition + (-transform.up * springLenght);
-                w.bone.position = wheelPos;
-                w.mesh.position = wheelPos;
-
-                Debug.DrawRay(wheelPosition, -transform.up * springLenght);
-                Debug.DrawLine(wheelPosition + (-transform.up * springLenght), wheelPosition + (-transform.up * (springLenght + wheelRadius)), Color.red);
-            }
+            Debug.DrawRay(wheelPosition, -transform.up * w.currentSpringLenght);
+            Debug.DrawRay(hit.point, transform.up * wheelRadius, Color.red);
         }
 
-        DisableSuspensionRenderer();
+        else
+        {
+            Vector3 wheelPos = wheelPosition + (-transform.up * springLenght);
+            w.bone.position = wheelPos;
+            w.mesh.position = wheelPos;
+
+            Debug.DrawRay(wheelPosition, -transform.up * springLenght);
+            Debug.DrawLine(wheelPosition + (-transform.up * springLenght), wheelPosition + (-transform.up * (springLenght + wheelRadius)), Color.red);
+        }
     }
 
     void DisableSuspensionRenderer()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            mat.enabled = mat.enabled ? false : true;
+            matLeft.enabled = matLeft.enabled ? false : true;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            foreach (var w in wheels)
+            foreach (var w in wheelsLeft)
             {
                 w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
             }
