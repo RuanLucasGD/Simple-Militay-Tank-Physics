@@ -55,12 +55,14 @@ public class CameraController : MonoBehaviour
 
     public Vector3 GetTargetPosition()
     {
-        Vector3 pos = cam.position + cam.forward * 100;
+        Vector3 pos = cam.position + (cam.forward * 10000);
 
         if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxSightDistance))
         {
-            return hit.point;
+            pos = hit.point;
         }
+
+        Debug.DrawLine(cam.position, pos);
 
         return pos;
     }

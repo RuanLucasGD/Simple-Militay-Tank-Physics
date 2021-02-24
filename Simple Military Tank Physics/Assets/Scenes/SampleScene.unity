@@ -1970,7 +1970,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 286359440}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.760128, z: 0.79611206}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4820,10 +4820,10 @@ MonoBehaviour:
   vehicle: {fileID: 2290144006839859826}
   turret: {fileID: 745842493}
   gun: {fileID: 286359441}
-  rotSpeedHorizontal: 0.05
-  rotSpeedVertical: 0.05
+  rotSpeedHorizontal: 0.1
+  rotSpeedVertical: 0.1
   maxGunAngle: 30
-  minGunAngle: 10
+  minGunAngle: 20
 --- !u!1 &747344061
 GameObject:
   m_ObjectHideFlags: 0

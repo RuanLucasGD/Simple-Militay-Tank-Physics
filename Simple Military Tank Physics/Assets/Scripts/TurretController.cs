@@ -14,6 +14,9 @@ public class TurretController : MonoBehaviour
     public float maxGunAngle;
     public float minGunAngle;
 
+    private Quaternion turretRelativeRotation;
+    private Quaternion gunRelativeRotation;
+
     void Start()
     {
 
@@ -26,16 +29,17 @@ public class TurretController : MonoBehaviour
         Quaternion lookAtTurret = Quaternion.LookRotation(targetPos - turret.position, vehicle.up);
         Quaternion lookAtGun = Quaternion.LookRotation(targetPos - gun.position, gun.up);
 
-        Quaternion turretRotDelta = Quaternion.Euler(vehicle.eulerAngles - lookAtTurret.eulerAngles);
-        Quaternion gunRotDelta = Quaternion.Euler(turret.eulerAngles - lookAtGun.eulerAngles);
-        Quaternion turretRot = Quaternion.Euler(vehicle.eulerAngles - turretRotDelta.eulerAngles);
-        Quaternion gunRot = Quaternion.Euler(turret.eulerAngles - turretRotDelta.eulerAngles);
+        turretRelativeRotation = Quaternion.Slerp(turretRelativeRotation, Quaternion.Euler(vehicle.eulerAngles - lookAtTurret.eulerAngles), rotSpeedHorizontal);
+        gunRelativeRotation = Quaternion.Slerp(gunRelativeRotation, Quaternion.Euler(turret.eulerAngles - lookAtGun.eulerAngles), rotSpeedVertical);
 
-        turretRot = Quaternion.Slerp(turret.rotation, turretRot, rotSpeedHorizontal);
-        gunRot = Quaternion.Slerp(gun.rotation, gunRot, rotSpeedVertical);
+        Quaternion turretRot = Quaternion.Euler(vehicle.eulerAngles - turretRelativeRotation.eulerAngles);
+        Quaternion gunRot = Quaternion.Euler(turret.eulerAngles - gunRelativeRotation.eulerAngles);
 
-        turret.rotation = turretRot;
-        gun.rotation = gunRot;
+        Quaternion finalTurretRot = turretRot;
+        Quaternion finalGunRot = gunRot;
+
+        gun.rotation = finalGunRot; // FIRST!
+        turret.rotation = finalTurretRot; // LATER!
 
         float max = 360 - maxGunAngle;
         float min = minGunAngle;
