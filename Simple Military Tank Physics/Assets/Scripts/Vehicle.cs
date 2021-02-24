@@ -12,12 +12,13 @@ public class Vehicle : MonoBehaviour
 
         [NonSerialized] public float lastSpringLenght;
         [NonSerialized] public float currentSpringLenght;
+
         [NonSerialized] public MeshRenderer meshRenderer;
     }
 
     public float forwardAcceleration;
     public float rotationAcceleration;
-    public float maxSpeed;
+    public float maxMoveSpeed;
 
     public Transform centerOfMass;
 
@@ -34,22 +35,18 @@ public class Vehicle : MonoBehaviour
     [SerializeField] public Wheel[] wheelsRight;
 
     private Rigidbody rb;
-    private MeshRenderer[] wheelsRenderers;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.centerOfMass = centerOfMass.localPosition;
 
-        foreach (var w in wheelsLeft)
-        {
-            w.meshRenderer = w.mesh.GetComponent<MeshRenderer>();
-        }
+        foreach (var w in wheelsLeft) w.meshRenderer = w.mesh.GetComponent<MeshRenderer>();
+        foreach (var w in wheelsRight) w.meshRenderer = w.mesh.GetComponent<MeshRenderer>();
     }
 
     void FixedUpdate()
     {
-        rb.centerOfMass = centerOfMass.localPosition;
-
         foreach (var w in wheelsLeft) UseWheelCollider(w);
         foreach (var w in wheelsRight) UseWheelCollider(w);
 
@@ -94,10 +91,10 @@ public class Vehicle : MonoBehaviour
             float forwardDirection = vertical;
             float sideDirection = horizontal;
 
-            float forwardVel = Mathf.Clamp(localVeloity.z, -maxSpeed, maxSpeed);
+            float forwardVel = Mathf.Clamp(localVeloity.z, -maxMoveSpeed, maxMoveSpeed);
 
             forward *= 1 - Mathf.Abs(vertical);
-            forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxSpeed));
+            forwardDirection *= forwardAcceleration * (1 - (Mathf.Abs(forwardVel) / maxMoveSpeed));
             sideDirection *= w.collider.localPosition.z * rotationAcceleration;
 
             if (verticalRaw == -1) sideDirection *= -1;
@@ -135,14 +132,13 @@ public class Vehicle : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             matLeft.enabled = matLeft.enabled ? false : true;
+            matRight.enabled = matRight.enabled ? false : true;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            foreach (var w in wheelsLeft)
-            {
-                w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
-            }
+            foreach (var w in wheelsLeft) w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
+            foreach (var w in wheelsRight) w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
         }
     }
 }

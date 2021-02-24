@@ -3244,6 +3244,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 546675570}
+  - component: {fileID: 546675571}
   m_Layer: 0
   m_Name: body
   m_TagString: Untagged
@@ -3267,6 +3268,19 @@ Transform:
   m_Father: {fileID: 2290144006839859826}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &546675571
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546675569}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.5, y: 1, z: 10}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &550017123
 GameObject:
   m_ObjectHideFlags: 0
@@ -12711,6 +12725,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2290144006839859826}
+  - component: {fileID: 1478281820261687498}
   - component: {fileID: 1478281820261687497}
   m_Layer: 0
   m_Name: vehicle
@@ -12731,61 +12746,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7945d3ee41f2cd428c5e18d810e0cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardAcceleration: 500
+  forwardAcceleration: 700
   rotationAcceleration: 500
-  maxSpeed: 15
+  maxMoveSpeed: 15
   centerOfMass: {fileID: 173287777}
   matLeft: {fileID: 266676900564814823}
   matRight: {fileID: 4295856615213750000}
   wheelRadius: 0.4
   springLenght: 0.4
   springStiffness: 8000
-  damperStiffness: 1000
+  damperStiffness: 600
   springHeight: 0.1
   wheelsLeft:
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
+  - collider: {fileID: 1307328929}
+    bone: {fileID: 2415562531181270983}
+    mesh: {fileID: 2095069013085917795}
+  - collider: {fileID: 192892576}
+    bone: {fileID: 8822656132013142068}
+    mesh: {fileID: 7255597384427019290}
+  - collider: {fileID: 2129470184}
+    bone: {fileID: 5120133375246745313}
+    mesh: {fileID: 6399057144180163510}
+  - collider: {fileID: 1352645980}
+    bone: {fileID: 8279590514830976493}
+    mesh: {fileID: 6064004964997981384}
+  - collider: {fileID: 2110828537}
+    bone: {fileID: 633107936607600460}
+    mesh: {fileID: 8527496342641087888}
+  - collider: {fileID: 282604988}
+    bone: {fileID: 3858516587296757557}
+    mesh: {fileID: 46755108122484375}
+  - collider: {fileID: 1671981867}
+    bone: {fileID: 6047266584344509166}
+    mesh: {fileID: 7861205483594547868}
   wheelsRight:
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
-  - collider: {fileID: 0}
-    bone: {fileID: 0}
-    mesh: {fileID: 0}
+  - collider: {fileID: 2110868171}
+    bone: {fileID: 1739502197785289453}
+    mesh: {fileID: 8874929275413951758}
+  - collider: {fileID: 649651853}
+    bone: {fileID: 2781006367045162223}
+    mesh: {fileID: 3907876153946336005}
+  - collider: {fileID: 2146308813}
+    bone: {fileID: 7787596103227307013}
+    mesh: {fileID: 4448626155138493161}
+  - collider: {fileID: 402085749}
+    bone: {fileID: 887499339500991477}
+    mesh: {fileID: 6587151821920833183}
+  - collider: {fileID: 1985326038}
+    bone: {fileID: 3858655708186146855}
+    mesh: {fileID: 3178761535155638656}
+  - collider: {fileID: 521840224}
+    bone: {fileID: 2322509097663148254}
+    mesh: {fileID: 850443268981568350}
+  - collider: {fileID: 280570078}
+    bone: {fileID: 2749825779204941940}
+    mesh: {fileID: 531751349670541948}
+--- !u!54 &1478281820261687498
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478281820261687496}
+  serializedVersion: 2
+  m_Mass: 1000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &1491988860522947846
 Transform:
   m_ObjectHideFlags: 0
