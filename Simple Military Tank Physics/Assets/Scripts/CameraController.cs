@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/*
+A unica ultilidade real desse script é pegar a posição do alvo, o resto pode ser descartado que não irá afetar o script do veículo
+*/
 public class CameraController : MonoBehaviour
 {
     public Transform target;
@@ -7,10 +10,11 @@ public class CameraController : MonoBehaviour
     public float rotSpeed;
     public float camHeight;
     public float camZoomSpeed;
-    public float maxSightDistance;
+    public float maxSightDistance;  // distancia maxima que um alvo pode ser ser identificado
 
-    private Transform cam;
+    private Transform cam;          // camera do jogo
 
+    // --- distancia do zoom --- //
     public float maxCamDistance;
     public float minCamDistance;
 
@@ -20,6 +24,9 @@ public class CameraController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        transform.position = target.position;
+        transform.eulerAngles = Vector3.up * target.eulerAngles.y;
     }
 
     void FixedUpdate()
@@ -27,6 +34,7 @@ public class CameraController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
+        // aplicando zoom
         if (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.Joystick1Button4))
         {
             Vector3 moveVel = cam.forward * camZoomSpeed * mouseY;
@@ -43,6 +51,7 @@ public class CameraController : MonoBehaviour
                 if (mouseY < 0) cam.Translate(moveVel, Space.World);
             }
         }
+        // aplica rotação da camera
         else
         {
             Vector3 cameraLookAt = target.position + (Vector3.up * camHeight);
@@ -55,14 +64,11 @@ public class CameraController : MonoBehaviour
 
     public Vector3 GetTargetPosition()
     {
-        Vector3 pos = cam.position + (cam.forward * 10000);
+        // caso a camera não encontre nenhum alvo até a distancia maxima da mira, ele retorna um vetor para frente da camera,
+        //fazendo com que a torre do veículo mire para onde está apontandp
+        Vector3 pos = cam.position + (cam.forward * 5000);
 
-        if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxSightDistance))
-        {
-            pos = hit.point;
-        }
-
-        Debug.DrawLine(cam.position, pos);
+        if (Physics.Raycast(cam.position, cam.forward, out RaycastHit hit, maxSightDistance)) pos = hit.point;
 
         return pos;
     }
