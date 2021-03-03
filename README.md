@@ -4,6 +4,12 @@ Sistema de física para tanques de guerra simples open-source
 
 Feito usando Unity LTS 2019.4
 
+
+Demonstração no youtube
+
+https://www.youtube.com/channel/UCnfZi4AnLRRtwSze6PzHsng
+
+
 <h2>Proprio sistema de suspensão e direção para o veículo</h1>
 Simulação usando raycasts em cada roda do veículo para calcular a suspensão e aceleração
 
