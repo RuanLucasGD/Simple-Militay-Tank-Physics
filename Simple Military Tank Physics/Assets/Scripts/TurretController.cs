@@ -24,7 +24,7 @@ public class TurretController : MonoBehaviour
     private Quaternion turretRelativeRotation;  // rotação relativa da torre para o veículo
     private Quaternion gunRelativeRotation;     // rotação relativa do canhão para a torre
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         /*
         Usar apenas o lookAt para setar a rotação dos componentes causa grandes problemas na mira quando
@@ -47,8 +47,8 @@ public class TurretController : MonoBehaviour
         Quaternion lookAtGun = Quaternion.LookRotation(targetPos - gun.position, gun.up);
 
         // acha a rotação relativa e faz uma transição suavel da rotação
-        turretRelativeRotation = Quaternion.Slerp(turretRelativeRotation, Quaternion.Euler(vehicle.eulerAngles - lookAtTurret.eulerAngles), rotSpeedHorizontal);
-        gunRelativeRotation = Quaternion.Slerp(gunRelativeRotation, Quaternion.Euler(turret.eulerAngles - lookAtGun.eulerAngles), rotSpeedVertical);
+        turretRelativeRotation = Quaternion.Slerp(turretRelativeRotation, Quaternion.Euler(vehicle.eulerAngles - lookAtTurret.eulerAngles), rotSpeedHorizontal * Time.deltaTime);
+        gunRelativeRotation = Quaternion.Slerp(gunRelativeRotation, Quaternion.Euler(turret.eulerAngles - lookAtGun.eulerAngles), rotSpeedVertical * Time.deltaTime);
 
         // rotação final dos componentes 
         Quaternion turretRot = Quaternion.Euler(vehicle.eulerAngles - turretRelativeRotation.eulerAngles);
