@@ -19,6 +19,10 @@ public class CameraController : MonoBehaviour
     public float maxCamDistance;
     public float minCamDistance;
 
+    // --- rotação vertical --- //
+    public float minAngle;
+    public float maxAngle;
+
     private float currentRotX;
     private float currentRotY;
 
@@ -42,9 +46,9 @@ public class CameraController : MonoBehaviour
 
         // se clicar o botão direito mouse aplica zoom
         // se não a camera rotaciona em torno do veículo
-        if (Input.GetKey(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.JoystickButton4))
         {
-            currentDistance += m_mouseY * camZoomSpeed * Time.deltaTime;
+            currentDistance -= m_mouseY * camZoomSpeed * Time.deltaTime;
             currentDistance = Mathf.Clamp(currentDistance, minCamDistance, maxCamDistance);
         }
         else
@@ -52,7 +56,7 @@ public class CameraController : MonoBehaviour
             currentRotX += m_mouseX * rotSpeed;
             currentRotY -= m_mouseY * rotSpeed;
 
-            currentRotY = Mathf.Clamp(currentRotY, -10, 40);
+            currentRotY = Mathf.Clamp(currentRotY, minAngle, maxAngle);
             transform.eulerAngles = new Vector3(currentRotY, currentRotX);
         }
 
