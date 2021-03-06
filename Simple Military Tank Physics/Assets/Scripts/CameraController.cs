@@ -48,7 +48,7 @@ public class CameraController : MonoBehaviour
         // se não a camera rotaciona em torno do veículo
         if (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.JoystickButton4))
         {
-            currentDistance -= m_mouseY * camZoomSpeed * Time.deltaTime;
+            currentDistance += m_mouseY * camZoomSpeed * Time.deltaTime;
             currentDistance = Mathf.Clamp(currentDistance, minCamDistance, maxCamDistance);
         }
         else

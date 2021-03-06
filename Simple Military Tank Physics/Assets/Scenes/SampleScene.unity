@@ -7861,7 +7861,7 @@ MonoBehaviour:
   distance: 15
   target: {fileID: 2290144006839859826}
   rotSpeed: 2
-  camHeight: 6
+  camHeight: 3
   camZoomSpeed: 20
   maxSightDistance: 5000
   maxCamDistance: 50
@@ -16006,9 +16006,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7945d3ee41f2cd428c5e18d810e0cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardAcceleration: 400
-  rotationAcceleration: 350
-  maxMoveSpeed: 20
+  forwardAcceleration: 450
+  rotationAcceleration: 400
+  maxMoveSpeed: 30
   centerOfMass: {fileID: 173287777}
   wheelRadius: 0.45
   springStiffness: 7000

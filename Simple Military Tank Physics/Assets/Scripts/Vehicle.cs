@@ -124,6 +124,7 @@ public class Vehicle : MonoBehaviour
     private float maxAngularVelocity; // velocidade maxima de rotação que o veículo consegue alcançar
     private float wheelCircunference; // usado para saber a velocidade que as rodas giram
 
+    private bool hideWheels; // se a mesh da roda está sendo renderizada ou não (para debug)
 
     // ---
     private Rigidbody rb;
@@ -373,16 +374,17 @@ public class Vehicle : MonoBehaviour
     */
     void DisableSuspensionRenderer()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Joystick1Button3))
         {
             matLeft.enabled = matLeft.enabled ? false : true;
             matRight.enabled = matRight.enabled ? false : true;
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Joystick1Button2))
         {
-            foreach (var w in wheelsLeft) w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
-            foreach (var w in wheelsRight) w.meshRenderer.enabled = w.meshRenderer.enabled ? false : true;
+            hideWheels = hideWheels ? false : true;
+            foreach (var w in wheelsLeft) w.meshRenderer.enabled = hideWheels;
+            foreach (var w in wheelsRight) w.meshRenderer.enabled = hideWheels;
         }
     }
 }
